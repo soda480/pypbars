@@ -1,0 +1,31 @@
+name: build
+on:
+  schedule:
+  - cron: "0 8 * * *"
+  push:
+    branches:
+      - '**'
+  pull_request:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Build Docker image
+      run: |
+        docker image build -t pypbars:latest .
+
+    - name: Prepare coverage
+      run: |
+        ID=$(docker create pypbars)
+        docker cp $ID:/code/target/reports/pypbars_coverage.xml pypbars_coverage.xml
+        sed -i -e 's,filename="pypbars/,filename="src/main/python/pypbars/,g' pypbars_coverage.xml
+
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        file: pypbars_coverage.xml
