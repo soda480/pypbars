@@ -1,9 +1,9 @@
 # pypbars
-[![build](https://github.com/soda480/pybars/actions/workflows/main.yml/badge.svg)](https://github.com/soda480/pybars/actions/workflows/main.yml)
-[![Code Grade](https://api.codiga.io/project/33832/status/svg)](https://app.codiga.io/public/project/33832/mppbar/dashboard)
-[![codecov](https://codecov.io/gh/soda480/l2term/branch/main/graph/badge.svg?token=IYQBFG9J8G)](https://codecov.io/gh/soda480/l2term)
+[![build](https://github.com/soda480/pypbars/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/soda480/pypbars/actions/workflows/main.yml)
+[![Code Grade](https://api.codiga.io/project/33925/status/svg)](https://app.codiga.io/public/project/33925/pypbars/dashboard)
+[![codecov](https://codecov.io/gh/soda480/pypbars/branch/main/graph/badge.svg?token=1G4T6UYTEX)](https://codecov.io/gh/soda480/pypbars)
 [![vulnerabilities](https://img.shields.io/badge/vulnerabilities-None-brightgreen)](https://pypi.org/project/bandit/)
-[![PyPI version](https://badge.fury.io/py/pybars.svg)](https://badge.fury.io/py/l2term)
+[![PyPI version](https://badge.fury.io/py/pypbars.svg)](https://badge.fury.io/py/pypbars)
 [![python](https://img.shields.io/badge/python-3.9-teal)](https://www.python.org/downloads/)
 
 The `pypbars` module provides a convenient way to dynamically display multiple progress bars to the terminal. The `pypbars.ProgressBars` class is a subclass of [l2term.Lines](https://pypi.org/project/l2term/) that displays lists to the terminal, and uses [progress1bar.ProgressBar](https://pypi.org/project/progress1bar/) to render the progress bar.
@@ -51,6 +51,8 @@ if __name__ == '__main__':
 ```
 
 </details>
+
+![example1](https://raw.githubusercontent.com/soda480/pypbars/main/docs/images/example1.gif)
 
 ### Development
 
