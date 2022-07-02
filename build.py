@@ -15,7 +15,7 @@ name = 'pypbars'
 authors = [Author('Emilio Reyes', 'soda480@gmail.com')]
 summary = 'Provides a convenient way to dynamically display multiple progress bars to the terminal.'
 url = 'https://github.com/soda480/pypbars'
-version = '0.1.1'
+version = '0.1.2'
 default_task = [
     'clean',
     'analyze',
