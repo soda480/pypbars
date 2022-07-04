@@ -33,13 +33,13 @@ class TestProgressBars(unittest.TestCase):
     def test__init_Should_CallProgressBarWithDefaultValues_When_RegexAttributeNotProvided(self, progress_bar_patch, *patches):
         lookup = ['one', 'two', 'three']
         ProgressBars(lookup=lookup)
-        progress_bar_patch.assert_called_with(regex=ProgressBars.regex, fill=None, control=True)
+        progress_bar_patch.assert_called_with(regex=ProgressBars.regex, control=True)
 
     @patch('pypbars.pypbars.ProgressBar')
     def test__init_Should_CallProgressBarWithUserProvidedValues_When_RegexAndFillAttributeProvided(self, progress_bar_patch, *patches):
         lookup = ['one', 'two', 'three']
-        ProgressBars(lookup=lookup, fill='--fill--', regex='--regex--')
-        progress_bar_patch.assert_called_with(regex='--regex--', fill='--fill--', control=True)
+        ProgressBars(lookup=lookup, regex='--regex--')
+        progress_bar_patch.assert_called_with(regex='--regex--', control=True)
 
     @patch('pypbars.ProgressBars.get_index_message', return_value=(None, None))
     @patch('pypbars.pypbars.logger')

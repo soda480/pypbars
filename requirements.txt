@@ -1,2 +1,2 @@
-l2term==0.1.5
-progress1bar==0.2.3
+l2term~=0.1.5
+progress1bar~=0.2.4

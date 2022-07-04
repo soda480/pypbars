@@ -14,32 +14,26 @@ class ProgressBars(Lines):
         'alias': r'^worker is (?P<value>.*)$'
     }
 
-    def __init__(self, regex=None, fill=None, log_write=True, **kwargs):
+    def __init__(self, regex=None, log_write=True, lookup=None, show_index=True, **kwargs):
         """ constructor
         """
-        def validate(kwargs):
-            """ validate various constructor key word arguments
-            """
-            if kwargs.get('data'):
-                # data list will be constructed by this class
-                raise ValueError('specifying data is not supported')
-            if kwargs.get('size'):
-                # size will be determined from length of lookup list
-                raise ValueError('specifying size is not supported')
-            if kwargs.get('lookup') is None:
-                raise ValueError('a lookup attribute is required')
-
         logger.debug('executing ProgressBars constructor')
-        validate(kwargs)
+        if kwargs.get('data'):
+            # data list will be constructed by this class
+            raise ValueError('specifying data is not supported')
+        if kwargs.get('size'):
+            # size will be determined from length of lookup list
+            raise ValueError('specifying size is not supported')
+        if not lookup:
+            raise ValueError('a lookup attribute is required')
         if not regex:
             regex = ProgressBars.regex
-        kwargs['size'] = len(kwargs['lookup'])
+        size = len(lookup)
         data = []
-        for _ in range(kwargs.get('size')):
-            data.append(ProgressBar(regex=regex, fill=fill, control=True))
-        kwargs['data'] = data
+        for _ in range(size):
+            data.append(ProgressBar(regex=regex, control=True, **kwargs))
         self._log_write = log_write
-        super().__init__(**kwargs)
+        super().__init__(data=data, size=size, lookup=lookup, show_index=show_index)
 
     def write(self, item):
         """ update appropriate progress bar as specified by item if applicable

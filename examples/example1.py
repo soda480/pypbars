@@ -4,7 +4,7 @@ import uuid
 from pypbars import ProgressBars
 
 async def do_work(worker, logger=None):
-    logger.write(f'{worker}->worker is {worker}')
+    logger.write(f'{worker}->worker is {worker[0:random.randint(12, 36)]}')
     total = random.randint(10, 65)
     logger.write(f'{worker}->processing total of {total} items')
     for count in range(total):
@@ -14,8 +14,8 @@ async def do_work(worker, logger=None):
     return total
 
 async def run(workers):
-    with ProgressBars(lookup=workers) as pbars:
-        doers = (do_work(worker, logger=pbars) for worker in workers)
+    with ProgressBars(lookup=workers, show_prefix=False, show_fraction=False, ticker=9644) as logger:
+        doers = (do_work(worker, logger=logger) for worker in workers)
         return await asyncio.gather(*doers)
 
 def main():

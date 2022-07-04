@@ -15,7 +15,7 @@ name = 'pypbars'
 authors = [Author('Emilio Reyes', 'soda480@gmail.com')]
 summary = 'Provides a convenient way to dynamically display multiple progress bars to the terminal.'
 url = 'https://github.com/soda480/pypbars'
-version = '0.1.1'
+version = '0.1.2'
 default_task = [
     'clean',
     'analyze',
@@ -60,7 +60,7 @@ def set_properties(project):
         'Topic :: Software Development :: Libraries :: Python Modules',
         'Topic :: System :: Networking',
         'Topic :: System :: Systems Administration'])
-    project.set_property('radon_break_build_average_complexity_threshold', 5)
+    project.set_property('radon_break_build_average_complexity_threshold', 6)
     project.set_property('radon_break_build_complexity_threshold', 10)
     project.set_property('bandit_break_build', True)
     project.set_property('anybadge_exclude', 'coverage, complexity')
