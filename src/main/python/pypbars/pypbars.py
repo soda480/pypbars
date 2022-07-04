@@ -18,19 +18,18 @@ class ProgressBars(Lines):
         """ constructor
         """
         logger.debug('executing ProgressBars constructor')
-        if not lookup:
-            raise ValueError('a lookup attribute is required')
         if kwargs.get('data'):
             # data list will be constructed by this class
             raise ValueError('specifying data is not supported')
         if kwargs.get('size'):
             # size will be determined from length of lookup list
             raise ValueError('specifying size is not supported')
+        if not lookup:
+            raise ValueError('a lookup attribute is required')
         if not regex:
             regex = ProgressBars.regex
         size = len(lookup)
         data = []
-        print(kwargs)
         for _ in range(size):
             data.append(ProgressBar(regex=regex, control=True, **kwargs))
         self._log_write = log_write
