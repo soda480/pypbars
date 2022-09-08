@@ -33,13 +33,13 @@ class TestProgressBars(unittest.TestCase):
     def test__init_Should_CallProgressBarWithDefaultValues_When_RegexAttributeNotProvided(self, progress_bar_patch, *patches):
         lookup = ['one', 'two', 'three']
         ProgressBars(lookup=lookup)
-        progress_bar_patch.assert_called_with(regex=ProgressBars.regex, control=True)
+        progress_bar_patch.assert_called_with(regex=ProgressBars.regex, control=True, use_color=True)
 
     @patch('pypbars.pypbars.ProgressBar')
     def test__init_Should_CallProgressBarWithUserProvidedValues_When_RegexAndFillAttributeProvided(self, progress_bar_patch, *patches):
         lookup = ['one', 'two', 'three']
-        ProgressBars(lookup=lookup, regex='--regex--')
-        progress_bar_patch.assert_called_with(regex='--regex--', control=True)
+        ProgressBars(lookup=lookup, regex='--regex--', use_color=False)
+        progress_bar_patch.assert_called_with(regex='--regex--', control=True, use_color=False)
 
     @patch('pypbars.ProgressBars.get_index_message', return_value=(None, None))
     @patch('pypbars.pypbars.logger')
@@ -60,6 +60,7 @@ class TestProgressBars(unittest.TestCase):
         progress_bar_patch.return_value = progress_bar_mock
         lookup = ['one', 'two', 'three']
         pbars = ProgressBars(lookup=lookup)
+        pbars._mirror[2] = '---'
         pbars.write('')
         print_line_patch.assert_called_once_with(2)
 
@@ -73,5 +74,25 @@ class TestProgressBars(unittest.TestCase):
         progress_bar_patch.return_value = progress_bar_mock
         lookup = ['one', 'two', 'three']
         pbars = ProgressBars(lookup=lookup)
+        pbars._mirror[2] = '---'
         pbars.write('')
         self.assertEqual(len(print_line_patch.mock_calls), 2)
+
+    @patch('pypbars.pypbars.logger')
+    @patch('pypbars.ProgressBars.get_index_message', return_value=(2, '--matched sub-message--'))
+    @patch('pypbars.ProgressBars.print_line')
+    @patch('pypbars.pypbars.ProgressBar')
+    def test_write_Should_NotPrintLine_When_IndexMatchButMirrorIsSame(self, progress_bar_patch, print_line_patch, *patches):
+        progress_bar_mock = Mock(complete=False)
+        progress_bar_mock.match.return_value = True
+        progress_bar_patch.return_value = progress_bar_mock
+        lookup = ['one', 'two', 'three']
+        pbars = ProgressBars(lookup=lookup)
+        pbars.write('')
+        print_line_patch.assert_not_called()
+
+    @patch('pypbars.pypbars.ProgressBar', return_value='')
+    def test__print_line_Should_UpdateMirror_When_Called(self, *patches):
+        lookup = ['one', 'two', 'three']
+        pbars = ProgressBars(lookup=lookup)
+        pbars.print_line(0)
