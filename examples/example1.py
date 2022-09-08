@@ -14,12 +14,12 @@ async def do_work(worker, logger=None):
     return total
 
 async def run(workers):
-    with ProgressBars(lookup=workers, show_prefix=False, show_fraction=False, ticker=9644) as logger:
+    with ProgressBars(lookup=workers, show_prefix=False, show_fraction=False) as logger:
         doers = (do_work(worker, logger=logger) for worker in workers)
         return await asyncio.gather(*doers)
 
 def main():
-    workers = [str(uuid.uuid4()) for _ in range(12)]
+    workers = [str(uuid.uuid4()) for _ in range(10)]
     print(f'Total of {len(workers)} workers working concurrently')
     results = asyncio.run(run(workers))
     print(f'The {len(workers)} workers processed a total of {sum(results)} items')
