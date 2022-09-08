@@ -52,6 +52,8 @@ if __name__ == '__main__':
 
 </details>
 
+![example1](https://raw.githubusercontent.com/soda480/pypbars/main/docs/images/example1.gif)
+
 #### [example2 - ProgressBars with multiprocessing Pool](https://github.com/soda480/pypbars/blob/main/examples/example2.py)
 
 This example demonstrates how `pypbars` can be used to display progress bars from processes executing in a multiprocessing Pool. The parent `l2term.multiprocessing` module contains helper classes that define a `LinesQueue` as well as a `QueueManager` to facilitate communication between worker processes and the main process. In this example, we leverage a Pool of workers to compute the number of prime numbers in a given number range. The worker processes are passed a queue that they write messages to, while the main process reads messages from the queue, interprets the message and updates the ProgressBar respectively. Note that each line represents a background worker process.
