@@ -13,9 +13,9 @@ use_plugin('pypi:pybuilder_anybadge')
 
 name = 'pypbars'
 authors = [Author('Emilio Reyes', 'soda480@gmail.com')]
-summary = 'Provides a convenient way to dynamically display multiple progress bars to the terminal.'
+summary = 'Provides a convenient way to display progress bars for concurrent asyncio or multiprocessing Pool processes.'
 url = 'https://github.com/soda480/pypbars'
-version = '0.1.4'
+version = '0.1.5'
 default_task = [
     'clean',
     'analyze',
