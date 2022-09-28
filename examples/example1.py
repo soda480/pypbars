@@ -1,15 +1,15 @@
 import asyncio
 import random
-import uuid
+from faker import Faker
 from pypbars import ProgressBars
 
 async def do_work(worker, logger=None):
-    logger.write(f'{worker}->worker is {worker[0:random.randint(12, 36)]}')
+    logger.write(f'{worker}->worker is {worker}')
     total = random.randint(10, 65)
     logger.write(f'{worker}->processing total of {total} items')
     for count in range(total):
         # mimic an IO-bound process
-        await asyncio.sleep(random.choice([.1, .2, .3]))
+        await asyncio.sleep(.1)
         logger.write(f'{worker}->processed {count}')
     return total
 
@@ -19,7 +19,7 @@ async def run(workers):
         return await asyncio.gather(*doers)
 
 def main():
-    workers = [str(uuid.uuid4()) for _ in range(10)]
+    workers = [Faker().user_name() for _ in range(10)]
     print(f'Total of {len(workers)} workers working concurrently')
     results = asyncio.run(run(workers))
     print(f'The {len(workers)} workers processed a total of {sum(results)} items')

@@ -4,5 +4,5 @@ FROM python:${PYTHON_VERSION}-slim
 ENV PYTHONDONTWRITEBYTECODE 1
 WORKDIR /code
 COPY . /code/
-RUN pip install --upgrade pip && pip install pybuilder
+RUN pip install --upgrade pip && pip install pybuilder faker
 RUN pyb -X

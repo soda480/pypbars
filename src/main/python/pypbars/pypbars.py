@@ -1,5 +1,5 @@
 import logging
-from l2term import Lines
+from list2term import Lines
 from progress1bar import ProgressBar
 
 logger = logging.getLogger(__name__)

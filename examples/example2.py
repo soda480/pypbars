@@ -2,8 +2,8 @@ import time
 from multiprocessing import Pool
 from multiprocessing import get_context
 from multiprocessing import cpu_count
-from l2term.multiprocessing import LinesQueue
-from l2term.multiprocessing import QueueManager
+from list2term.multiprocessing import LinesQueue
+from list2term.multiprocessing import QueueManager
 from queue import Empty
 from pypbars import ProgressBars
 

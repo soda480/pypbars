@@ -50,7 +50,6 @@ jobs:
           docker cp $ID:/code/target/reports/pypbars_coverage.xml pypbars_coverage.xml
           sed -i -e 's,filename="pypbars/,filename="src/main/python/pypbars/,g' pypbars_coverage.xml
       - name: upload report
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@v3
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
           file: pypbars_coverage.xml

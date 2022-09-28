@@ -1,12 +1,12 @@
 # pypbars
 [![build](https://github.com/soda480/pypbars/actions/workflows/main.yml/badge.svg?branch=main)](https://github.com/soda480/pypbars/actions/workflows/main.yml)
-[![Code Grade](https://api.codiga.io/project/33925/status/svg)](https://app.codiga.io/public/project/33925/pypbars/dashboard)
-[![codecov](https://codecov.io/gh/soda480/pypbars/branch/main/graph/badge.svg?token=1G4T6UYTEX)](https://codecov.io/gh/soda480/pypbars)
+[![Code Grade](https://api.codiga.io/project/34681/status/svg)](https://app.codiga.io/hub/project/34681/pypbars)
+[![coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://pybuilder.io/)
 [![vulnerabilities](https://img.shields.io/badge/vulnerabilities-None-brightgreen)](https://pypi.org/project/bandit/)
 [![PyPI version](https://badge.fury.io/py/pypbars.svg)](https://badge.fury.io/py/pypbars)
 [![python](https://img.shields.io/badge/python-3.7%20%7C%203.8%20%7C%203.9%20%7C%203.10-teal)](https://www.python.org/downloads/)
 
-The `pypbars` module provides a convenient way to display progress bars for concurrent [asyncio](https://docs.python.org/3/library/asyncio.html) or [multiprocessing Pool](https://docs.python.org/3/library/multiprocessing.html#multiprocessing.pool.Pool) processes. The `pypbars.ProgressBars` class is a subclass of [l2term.Lines](https://pypi.org/project/l2term/) that displays a list to the terminal, and uses [progress1bar.ProgressBar](https://pypi.org/project/progress1bar/) to render the progress bar.
+The `pypbars` module provides a convenient way to display progress bars for concurrent [asyncio](https://docs.python.org/3/library/asyncio.html) or [multiprocessing Pool](https://docs.python.org/3/library/multiprocessing.html#multiprocessing.pool.Pool) processes. The `pypbars` class is a subclass of [l2term](https://pypi.org/project/list2term/) that displays a list to the terminal, and uses [progress1bar](https://pypi.org/project/progress1bar/) to render the progress bar.
 
 ### Installation
 ```bash
@@ -22,26 +22,26 @@ Create `ProgressBars` using a lookup list containing unique values, these identi
 ```Python
 import asyncio
 import random
-import uuid
+from faker import Faker
 from pypbars import ProgressBars
 
 async def do_work(worker, logger=None):
-    logger.write(f'{worker}->worker is {worker[0:random.randint(12, 36)]}')
+    logger.write(f'{worker}->worker is {worker}')
     total = random.randint(10, 65)
     logger.write(f'{worker}->processing total of {total} items')
     for count in range(total):
         # mimic an IO-bound process
-        await asyncio.sleep(random.choice([.1, .2, .3]))
+        await asyncio.sleep(.1)
         logger.write(f'{worker}->processed {count}')
     return total
 
 async def run(workers):
-    with ProgressBars(lookup=workers, show_prefix=False, show_fraction=False, ticker=9644) as logger:
+    with ProgressBars(lookup=workers, show_prefix=False, show_fraction=False) as logger:
         doers = (do_work(worker, logger=logger) for worker in workers)
         return await asyncio.gather(*doers)
 
 def main():
-    workers = [str(uuid.uuid4()) for _ in range(12)]
+    workers = [Faker().user_name() for _ in range(10)]
     print(f'Total of {len(workers)} workers working concurrently')
     results = asyncio.run(run(workers))
     print(f'The {len(workers)} workers processed a total of {sum(results)} items')
@@ -65,8 +65,8 @@ import time
 from multiprocessing import Pool
 from multiprocessing import get_context
 from multiprocessing import cpu_count
-from l2term.multiprocessing import LinesQueue
-from l2term.multiprocessing import QueueManager
+from list2term.multiprocessing import LinesQueue
+from list2term.multiprocessing import QueueManager
 from queue import Empty
 from pypbars import ProgressBars
 
