@@ -15,7 +15,7 @@ name = 'pypbars'
 authors = [Author('Emilio Reyes', 'soda480@gmail.com')]
 summary = 'Provides a convenient way to display progress bars for concurrent asyncio or multiprocessing Pool processes.'
 url = 'https://github.com/soda480/pypbars'
-version = '0.1.6'
+version = '0.1.7'
 default_task = [
     'clean',
     'analyze',
@@ -52,4 +52,3 @@ def set_properties(project):
     project.set_property('radon_break_build_complexity_threshold', 10)
     project.set_property('bandit_break_build', True)
     project.set_property('anybadge_exclude', 'complexity')
-
