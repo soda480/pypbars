@@ -6,7 +6,7 @@
 [![PyPI version](https://badge.fury.io/py/pypbars.svg)](https://badge.fury.io/py/pypbars)
 [![python](https://img.shields.io/badge/python-3.7%20%7C%203.8%20%7C%203.9%20%7C%203.10-teal)](https://www.python.org/downloads/)
 
-The `pypbars` module provides a convenient way to display progress bars for concurrent [asyncio](https://docs.python.org/3/library/asyncio.html) or [multiprocessing Pool](https://docs.python.org/3/library/multiprocessing.html#multiprocessing.pool.Pool) processes. The `pypbars` class is a subclass of [l2term](https://pypi.org/project/list2term/) that displays a list to the terminal, and uses [progress1bar](https://pypi.org/project/progress1bar/) to render the progress bar.
+The `pypbars` module provides a convenient way to display progress bars for concurrent [asyncio](https://docs.python.org/3/library/asyncio.html) or [multiprocessing Pool](https://docs.python.org/3/library/multiprocessing.html#multiprocessing.pool.Pool) processes. The `pypbars` class is a subclass of [list2term](https://pypi.org/project/list2term/) that displays a list to the terminal, and uses [progress1bar](https://pypi.org/project/progress1bar/) to render the progress bar.
 
 ### Installation
 ```bash
@@ -56,21 +56,18 @@ if __name__ == '__main__':
 
 #### [example2 - ProgressBars with multiprocessing Pool](https://github.com/soda480/pypbars/blob/main/examples/example2.py)
 
-This example demonstrates how `pypbars` can be used to display progress bars from processes executing in a multiprocessing Pool. The parent `l2term.multiprocessing` module contains helper classes that define a `LinesQueue` as well as a `QueueManager` to facilitate communication between worker processes and the main process. In this example, we leverage a Pool of workers to compute the number of prime numbers in a given number range. The worker processes are passed a queue that they write messages to, while the main process reads messages from the queue, interprets the message and updates the ProgressBar respectively. Note that each line represents a background worker process.
+This example demonstrates how `pypbars` can be used to display progress bars from processes executing in a [multiprocessing Pool](https://docs.python.org/3/library/multiprocessing.html#using-a-pool-of-workers). The `pypbars.multiprocessing` module contains a `progress_bars` method that fully abstracts the required multiprocessing constructs, you simply pass it the function to execute along with an iterable of arguments to pass each process invocation. The method will execute the functions asynchronously and return a multiprocessing.pool.AsyncResult object. Additional key word arguments can be passed to the `progress_bars` method to control `ProgressBars` instance.  Each line in the terminal represents a background worker process.
+
+If you do not wish to use the abstraction, the `list2term.multiprocessing` module contains helper classes that define a `LinesQueue` as well as a `QueueManager` to facilitate communication between worker processes and the main process. Refer to [example3](https://github.com/soda480/pypbars/blob/main/examples/example3.py) for how the helper methods can be used. 
+
+**Note** the function being executed must accept a `logger` object that is used to write status messages, this is the mechanism for how status messages are sent from the worker processes to the main process, it is the main process that is displaying the progress bars to the terminal. The messages must be written using the format `{identifier}->{message}`, where (by default) {identifier} is a colon delimited string consisting of the function arguments, it uniquely identifies a process to the ProgressBars instance. You may choose to define your own identifer so long as you provide it via the `lookup` argument to the `ProgressBars` class or `progress_bars` method.
 
 <details><summary>Code</summary>
 
 ```Python
 import time
-from multiprocessing import Pool
-from multiprocessing import get_context
-from multiprocessing import cpu_count
-from list2term.multiprocessing import LinesQueue
-from list2term.multiprocessing import QueueManager
-from queue import Empty
-from pypbars import ProgressBars
-
-CONCURRENCY = cpu_count()
+from pypbars.multiprocessing import progress_bars
+from list2term.multiprocessing import CONCURRENCY
 
 def is_prime(num):
     if num == 1:
@@ -94,20 +91,8 @@ def count_primes(start, stop, logger):
 
 def main(number):
     step = int(number / CONCURRENCY)
-    QueueManager.register('LinesQueue', LinesQueue)
-    with QueueManager() as manager:
-        queue = manager.LinesQueue(ctx=get_context())
-        with Pool(CONCURRENCY) as pool:
-            process_data = [(index, index + step, queue) for index in range(0, number, step)]
-            results = pool.starmap_async(count_primes, process_data)
-            lookup = [f'{data[0]}:{data[1]}' for data in process_data]
-            with ProgressBars(lookup=lookup, show_prefix=False, show_fraction=False, use_color=True) as lines:
-                while True:
-                    try:
-                        lines.write(queue.get(timeout=.1))
-                    except Empty:
-                        if results.ready():
-                            break
+    iterable = [(index, index + step) for index in range(0, number, step)]
+    results = progress_bars(count_primes, iterable, use_color=True, show_prefix=False, show_fraction=False)
     return sum(results.get())
 
 if __name__ == '__main__':
