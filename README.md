@@ -56,17 +56,18 @@ if __name__ == '__main__':
 
 #### [example2 - ProgressBars with multiprocessing Pool](https://github.com/soda480/pypbars/blob/main/examples/example2.py)
 
-This example demonstrates how `pypbars` can be used to display progress bars from processes executing in a [multiprocessing Pool](https://docs.python.org/3/library/multiprocessing.html#using-a-pool-of-workers). The `pypbars.multiprocessing` module contains a `progress_bars` method that fully abstracts the required multiprocessing constructs, you simply pass it the function to execute along with an iterable of arguments to pass each process invocation. The method will execute the functions asynchronously and return a multiprocessing.pool.AsyncResult object. Additional key word arguments can be passed to the `progress_bars` method to control `ProgressBars` instance.  Each line in the terminal represents a background worker process.
+This example demonstrates how `pypbars` can be used to display progress bars from processes executing in a [multiprocessing Pool](https://docs.python.org/3/library/multiprocessing.html#using-a-pool-of-workers). The `list2term.multiprocessing` module contains a `pool_with_queue` method that fully abstracts the required multiprocessing constructs, you simply pass it the function to execute, an iterable containing the arguments to pass each process, and an instance of `ProgressBars`. The method will execute the functions asynchronously, update the progress bars accordingly and return a multiprocessing.pool.AsyncResult object. Each progress bar in the terminal represents a background worker process.
 
-If you do not wish to use the abstraction, the `list2term.multiprocessing` module contains helper classes that define a `LinesQueue` as well as a `QueueManager` to facilitate communication between worker processes and the main process. Refer to [example3](https://github.com/soda480/pypbars/blob/main/examples/example3.py) for how the helper methods can be used. 
+If you do not wish to use the abstraction, the `list2term.multiprocessing` module contains helper classes that facilitate communication between the worker processes and the main process; the `QueueManager` provide a way to create a `LinesQueue` queue which can be shared between different processes. Refer to [example3](https://github.com/soda480/pypbars/blob/main/examples/example3.py) for how the helper methods can be used. 
 
-**Note** the function being executed must accept a `logger` object that is used to write status messages, this is the mechanism for how status messages are sent from the worker processes to the main process, it is the main process that is displaying the progress bars to the terminal. The messages must be written using the format `{identifier}->{message}`, where (by default) {identifier} is a colon delimited string consisting of the function arguments, it uniquely identifies a process to the ProgressBars instance. You may choose to define your own identifer so long as you provide it via the `lookup` argument to the `ProgressBars` class or `progress_bars` method.
+**Note** the function being executed must accept a `LinesQueue` object that is used to write messages via its `write` method, this is the mechanism for how messages are sent from the worker processes to the main process, it is the main process that is displaying the messages to the terminal. The messages must be written using the format `{identifier}->{message}`, where {identifier} is a string that uniquely identifies a process, defined via the lookup argument to `ProgressBars`.
 
 <details><summary>Code</summary>
 
 ```Python
 import time
-from pypbars.multiprocessing import progress_bars
+from pypbars import ProgressBars
+from list2term.multiprocessing import pool_with_queue
 from list2term.multiprocessing import CONCURRENCY
 
 def is_prime(num):
@@ -92,7 +93,9 @@ def count_primes(start, stop, logger):
 def main(number):
     step = int(number / CONCURRENCY)
     iterable = [(index, index + step) for index in range(0, number, step)]
-    results = progress_bars(count_primes, iterable, use_color=True, show_prefix=False, show_fraction=False)
+    lookup = [':'.join(map(str, item)) for item in iterable]
+    progress_bars = ProgressBars(lookup=lookup, show_prefix=False, show_fraction=False, use_color=True)
+    results = pool_with_queue(count_primes, iterable, progress_bars)
     return sum(results.get())
 
 if __name__ == '__main__':
