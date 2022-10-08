@@ -1,5 +1,6 @@
 import time
-from pypbars.multiprocessing import progress_bars
+from pypbars import ProgressBars
+from list2term.multiprocessing import pool_with_queue
 from list2term.multiprocessing import CONCURRENCY
 
 def is_prime(num):
@@ -25,7 +26,9 @@ def count_primes(start, stop, logger):
 def main(number):
     step = int(number / CONCURRENCY)
     iterable = [(index, index + step) for index in range(0, number, step)]
-    results = progress_bars(count_primes, iterable, use_color=True, show_prefix=False, show_fraction=False)
+    lookup = [':'.join(map(str, item)) for item in iterable]
+    progress_bars = ProgressBars(lookup=lookup, show_prefix=False, show_fraction=False, use_color=True)
+    results = pool_with_queue(count_primes, iterable, progress_bars)
     return sum(results.get())
 
 if __name__ == '__main__':
