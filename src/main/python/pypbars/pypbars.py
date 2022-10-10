@@ -14,7 +14,7 @@ class ProgressBars(Lines):
         'alias': r'^worker is (?P<value>.*)$'
     }
 
-    def __init__(self, regex=None, log_write=True, lookup=None, show_index=True, use_color=True, **kwargs):
+    def __init__(self, regex=None, lookup=None, show_index=True, use_color=True, **kwargs):
         """ constructor
         """
         logger.debug('executing ProgressBars constructor')
@@ -35,14 +35,13 @@ class ProgressBars(Lines):
             progress_bar = ProgressBar(regex=regex, control=True, use_color=use_color, **kwargs)
             data.append(progress_bar)
             self._mirror.append(str(progress_bar))
-        self._log_write = log_write
         super().__init__(data=data, size=size, lookup=lookup, show_index=show_index, use_color=use_color)
 
     def print_line(self, index, force=False):
         super().print_line(index, force=force)
         self._mirror[index] = str(self[index])
 
-    def write(self, item):
+    def write(self, item, log=True):
         """ update appropriate progress bar as specified by item if applicable
             check if item contains directed message for an identity
             the index for the progress bar is determined using the extracted identity with the lookup table
@@ -59,5 +58,5 @@ class ProgressBars(Lines):
             if self[index].complete:
                 # print the progress bar when it completes
                 self.print_line(index)
-        if self._log_write:
+        if log:
             logger.debug(item)
