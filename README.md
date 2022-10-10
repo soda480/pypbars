@@ -56,7 +56,7 @@ if __name__ == '__main__':
 
 #### [example2 - ProgressBars with multiprocessing Pool](https://github.com/soda480/pypbars/blob/main/examples/example2.py)
 
-This example demonstrates how `pypbars` can be used to display progress bars from processes executing in a [multiprocessing Pool](https://docs.python.org/3/library/multiprocessing.html#using-a-pool-of-workers). The `list2term.multiprocessing` module contains a `pool_with_queue` method that fully abstracts the required multiprocessing constructs, you simply pass it the function to execute, an iterable containing the arguments to pass each process, and an instance of `ProgressBars`. The method will execute the functions asynchronously, update the progress bars accordingly and return a multiprocessing.pool.AsyncResult object. Each progress bar in the terminal represents a background worker process.
+This example demonstrates how `pypbars` can be used to display progress bars from processes executing in a [multiprocessing Pool](https://docs.python.org/3/library/multiprocessing.html#using-a-pool-of-workers). The `list2term.multiprocessing` module contains a `pool_map` method that fully abstracts the required multiprocessing constructs, you simply pass it the function to execute, an iterable containing the arguments to pass each process, and an instance of `ProgressBars`. The method will execute the functions asynchronously, update the progress bars accordingly and return a multiprocessing.pool.AsyncResult object. Each progress bar in the terminal represents a background worker process.
 
 If you do not wish to use the abstraction, the `list2term.multiprocessing` module contains helper classes that facilitate communication between the worker processes and the main process; the `QueueManager` provide a way to create a `LinesQueue` queue which can be shared between different processes. Refer to [example3](https://github.com/soda480/pypbars/blob/main/examples/example3.py) for how the helper methods can be used. 
 
@@ -67,7 +67,7 @@ If you do not wish to use the abstraction, the `list2term.multiprocessing` modul
 ```Python
 import time
 from pypbars import ProgressBars
-from list2term.multiprocessing import pool_with_queue
+from list2term.multiprocessing import pool_map
 from list2term.multiprocessing import CONCURRENCY
 
 def is_prime(num):
@@ -95,7 +95,7 @@ def main(number):
     iterable = [(index, index + step) for index in range(0, number, step)]
     lookup = [':'.join(map(str, item)) for item in iterable]
     progress_bars = ProgressBars(lookup=lookup, show_prefix=False, show_fraction=False, use_color=True)
-    results = pool_with_queue(count_primes, iterable, progress_bars)
+    results = pool_map(count_primes, iterable, progress_bars)
     return sum(results.get())
 
 if __name__ == '__main__':
