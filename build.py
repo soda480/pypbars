@@ -15,7 +15,7 @@ name = 'pypbars'
 authors = [Author('Emilio Reyes', 'soda480@gmail.com')]
 summary = 'Provides a convenient way to display progress bars for concurrent asyncio or multiprocessing Pool processes.'
 url = 'https://github.com/soda480/pypbars'
-version = '0.1.8'
+version = '0.1.9'
 default_task = [
     'clean',
     'analyze',

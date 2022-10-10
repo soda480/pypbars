@@ -27,7 +27,6 @@ class TestProgressBars(unittest.TestCase):
         pbars = ProgressBars(lookup=lookup)
         self.assertEqual(len(pbars.data), len(lookup))
         self.assertEqual(pbars.data[0], progress_bar_patch.return_value)
-        self.assertTrue(pbars._log_write)
 
     @patch('pypbars.pypbars.ProgressBar')
     def test__init_Should_CallProgressBarWithDefaultValues_When_RegexAttributeNotProvided(self, progress_bar_patch, *patches):
@@ -43,7 +42,7 @@ class TestProgressBars(unittest.TestCase):
 
     @patch('pypbars.ProgressBars.get_index_message', return_value=(None, None))
     @patch('pypbars.pypbars.logger')
-    def test_write_Should_LogItem_When_LogWriteAttributeTrue(self, logger_patch, *patches):
+    def test_write_Should_LogItem_When_LogTrueDefault(self, logger_patch, *patches):
         lookup = ['one', 'two', 'three']
         pbars = ProgressBars(lookup=lookup)
         message = 'some message'
