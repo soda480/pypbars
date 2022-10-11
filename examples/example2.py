@@ -21,6 +21,7 @@ def count_primes(start, stop, logger):
         if is_prime(number):
             primes += 1
         logger.write(f'{workerid}->processed {number}')
+    logger.write(f'{workerid}->{workerid} processing complete')
     return primes
 
 def main(number):
@@ -28,7 +29,12 @@ def main(number):
     iterable = [(index, index + step) for index in range(0, number, step)]
     lookup = [':'.join(map(str, item)) for item in iterable]
     progress_bars = ProgressBars(lookup=lookup, show_prefix=False, show_fraction=False, use_color=True)
-    results = pool_map(count_primes, iterable, progress_bars)
+    # print to screen with progress bars context
+    results = pool_map(count_primes, iterable, context=progress_bars)
+    # print to screen without progress bars context
+    # results = pool_map(count_primes, iterable)
+    # do not print to screen
+    # results = pool_map(count_primes, iterable, print_status=False)
     return sum(results.get())
 
 if __name__ == '__main__':
