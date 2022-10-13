@@ -28,7 +28,7 @@ def main(number):
     step = int(number / CONCURRENCY)
     iterable = [(index, index + step) for index in range(0, number, step)]
     lookup = [':'.join(map(str, item)) for item in iterable]
-    progress_bars = ProgressBars(lookup=lookup, show_prefix=False, show_fraction=False, use_color=True)
+    progress_bars = ProgressBars(lookup=lookup, show_prefix=False, show_fraction=False, use_color=True, show_duration=True)
     # print to screen with progress bars context
     results = pool_map(count_primes, iterable, context=progress_bars)
     # print to screen without progress bars context
