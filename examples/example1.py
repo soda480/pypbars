@@ -14,7 +14,7 @@ async def do_work(worker, logger=None):
     return total
 
 async def run(workers):
-    with ProgressBars(lookup=workers, show_prefix=False, show_fraction=False) as logger:
+    with ProgressBars(lookup=workers, show_prefix=False, show_fraction=False, show_duration=True) as logger:
         doers = (do_work(worker, logger=logger) for worker in workers)
         return await asyncio.gather(*doers)
 
