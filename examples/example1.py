@@ -2,6 +2,10 @@ import asyncio
 import random
 from faker import Faker
 from pypbars import ProgressBars
+import logging
+
+logging.getLogger('faker.factory').setLevel(logging.ERROR)
+
 
 async def do_work(worker, logger=None):
     logger.write(f'{worker}->worker is {worker}')
@@ -25,4 +29,9 @@ def main():
     print(f'The {len(workers)} workers processed a total of {sum(results)} items')
 
 if __name__ == '__main__':
+    logging.basicConfig(filename='example1.log',
+                        filemode='a',
+                        format='%(asctime)s,%(msecs)d %(name)s %(levelname)s %(message)s',
+                        datefmt='%H:%M:%S',
+                        level=logging.DEBUG)
     main()
