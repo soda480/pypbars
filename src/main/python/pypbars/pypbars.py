@@ -64,9 +64,5 @@ class ProgressBars(Lines):
                     logger.debug(f'skipping print - the progress bar at index {index} has not changed after match')
                 else:
                     self.print_line(index)
-            # TODO: confirm this line is still needed????
-            if self[index].complete:
-                # print the progress bar when it completes
-                self.print_line(index)
         if self._log_write:
             logger.debug(item)

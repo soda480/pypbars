@@ -20,17 +20,19 @@ def count_primes(start, stop, logger):
     for number in range(start, stop):
         if is_prime(number):
             primes += 1
+        # expensive operation here - but required for progress bar
         logger.write(f'{workerid}->processed {number}')
     logger.write(f'{workerid}->{workerid} processing complete')
     return primes
 
 def main(number):
     step = int(number / CONCURRENCY)
+    print(f"Distributing {int(number / step)} ranges across {CONCURRENCY} workers running concurrently")
     iterable = [(index, index + step) for index in range(0, number, step)]
     lookup = [':'.join(map(str, item)) for item in iterable]
     progress_bars = ProgressBars(lookup=lookup, show_prefix=False, show_fraction=False, use_color=True, show_duration=True)
     # print to screen with progress bars context
-    results = pool_map(count_primes, iterable, context=progress_bars)
+    results = pool_map(count_primes, iterable, context=progress_bars, processes=None)
     # print to screen without progress bars context
     # results = pool_map(count_primes, iterable)
     # do not print to screen

@@ -1,3 +1,4 @@
+# test non-attached terminal
 import time
 from pypbars import ProgressBars
 from list2term.multiprocessing import pool_map
