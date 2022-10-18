@@ -38,6 +38,14 @@ class ProgressBars(Lines):
         self._log_write = log_write
         super().__init__(data=data, size=size, lookup=lookup, show_index=show_index, use_color=use_color)
 
+    def __enter__(self):
+        """ on entry hide cursor if stderr is attached to tty
+
+            override parent in order to not print axis or lines
+        """
+        self.hide_cursor()
+        return self
+
     def print_line(self, index, force=False):
         super().print_line(index, force=force)
         self._mirror[index] = str(self[index])
@@ -56,8 +64,5 @@ class ProgressBars(Lines):
                     logger.debug(f'skipping print - the progress bar at index {index} has not changed after match')
                 else:
                     self.print_line(index)
-            if self[index].complete:
-                # print the progress bar when it completes
-                self.print_line(index)
         if self._log_write:
             logger.debug(item)

@@ -75,7 +75,7 @@ class TestProgressBars(unittest.TestCase):
         pbars = ProgressBars(lookup=lookup)
         pbars._mirror[2] = '---'
         pbars.write('')
-        self.assertEqual(len(print_line_patch.mock_calls), 2)
+        self.assertEqual(len(print_line_patch.mock_calls), 1)
 
     @patch('pypbars.pypbars.logger')
     @patch('pypbars.ProgressBars.get_index_message', return_value=(2, '--matched sub-message--'))

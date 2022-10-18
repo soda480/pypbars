@@ -1,2 +1,2 @@
-list2term~=0.1.4
-progress1bar~=0.2.7
+list2term~=0.1.5
+progress1bar~=0.3.0
