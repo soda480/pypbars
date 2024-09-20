@@ -207,8 +207,7 @@ Clone the repository and ensure the latest version of Docker is installed on you
 Build the Docker image:
 ```sh
 docker image build \
--t \
-pypbars:latest .
+-t pypbars:latest .
 ```
 
 Run the Docker container:
